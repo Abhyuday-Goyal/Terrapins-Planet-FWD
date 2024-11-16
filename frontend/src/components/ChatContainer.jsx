@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Send, Bot, User, Loader } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Bot, User, Loader, Image } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
       type: 'bot',
-      content:
-        'Welcome to our corporate assistance center. How may I help you today?',
+      content: 'Welcome to our corporate assistance center. How may I help you today?',
     },
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -32,15 +31,13 @@ const ChatBot = () => {
       type: 'user',
       content: inputMessage.trim(),
     };
-    console.log('user log is', userMessage);
+
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage('');
     setIsLoading(true);
-    console.log(JSON.stringify({ question: userMessage.content }));
 
     try {
       const response = await fetch('http://localhost:8000/chatbot', {
-        // mode: 'no-cors',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: userMessage.content }),
@@ -51,42 +48,73 @@ const ChatBot = () => {
       }
 
       const data = await response.json();
-      console.log('data is', data);
 
-      // Check if the response is an error message
       if (data.error) {
         setMessages((prev) => [
           ...prev,
-          {
-            id: Date.now(),
-            type: 'bot',
-            content: data.error,
-          },
+          { id: Date.now(), type: 'bot', content: data.error },
         ]);
       } else {
-        // If the response is a list of results, format it as a string
-        const botResponse = Array.isArray(data)
-          ? data.map((item) => JSON.stringify(item)).join('\n')
-          : data.message || JSON.stringify(data);
-
         setMessages((prev) => [
           ...prev,
-          {
-            id: Date.now(),
-            type: 'bot',
-            content: botResponse,
-          },
+          { id: Date.now(), type: 'bot', content: data.message || JSON.stringify(data) },
         ]);
       }
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        {
-          id: Date.now(),
-          type: 'bot',
-          content:
-            "I apologize, but I'm unable to process your request at the moment. Please try again later.",
-        },
+        { id: Date.now(), type: 'bot', content: "I apologize, something went wrong. Please try again." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const userMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: 'Uploaded an image.',
+      image: URL.createObjectURL(file),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8000/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload the image');
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now(), type: 'bot', content: 'Failed to process the image. Please try again.' },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { id: Date.now(), type: 'bot', content: data.message || 'Image processed successfully.' },
+        ]);
+      }
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), type: 'bot', content: 'Failed to process the image. Please try again.' },
       ]);
     } finally {
       setIsLoading(false);
@@ -104,7 +132,9 @@ const ChatBot = () => {
         className={`flex w-full mb-4 ${isBot ? 'justify-start' : 'justify-end'}`}
       >
         <div
-          className={`flex items-start max-w-[80%] ${isBot ? 'flex-row' : 'flex-row-reverse'}`}
+          className={`flex items-start max-w-[80%] ${
+            isBot ? 'flex-row' : 'flex-row-reverse'
+          }`}
         >
           <div
             className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -126,9 +156,17 @@ const ChatBot = () => {
                 : 'bg-gradient-to-br from-purple-500/20 to-blue-500/20 text-white border border-white/10'
             } shadow-lg backdrop-blur-sm`}
           >
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">
-              {message.content}
-            </p>
+            {message.image ? (
+              <img
+                src={message.image}
+                alt="Uploaded"
+                className="w-60 h-auto rounded-lg object-cover"
+              />
+            ) : (
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                {message.content}
+              </p>
+            )}
           </div>
         </div>
       </motion.div>
@@ -142,7 +180,7 @@ const ChatBot = () => {
       messages.map((message) => (
         <MessageBubble key={message.id} message={message} />
       )),
-    [messages],
+    [messages]
   );
 
   return (
@@ -168,30 +206,37 @@ const ChatBot = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="p-6 backdrop-blur-sm bg-white/5 border-t border-white/10"
-      >
+      <form className="p-6 backdrop-blur-sm bg-white/5 border-t border-white/10">
         <div className="flex items-center space-x-4">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+            id="imageUpload"
+          />
+          <label
+            htmlFor="imageUpload"
+            className="p-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 cursor-pointer shadow-lg"
+          >
+            <Image size={20} />
+          </label>
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 p-4 rounded-lg bg-white/5 text-white placeholder-white/50 
-                     border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50
-                     shadow-inner"
+            className="flex-1 p-4 rounded-lg bg-white/5 text-white placeholder-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner"
           />
           <motion.button
             type="submit"
+            onClick={handleSubmit}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="p-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white
-                     hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 
-                     focus:ring-purple-500/50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-4 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
-            <Send size={20} className={isLoading ? 'opacity-50' : ''} />
+            <Send size={20} />
           </motion.button>
         </div>
       </form>
