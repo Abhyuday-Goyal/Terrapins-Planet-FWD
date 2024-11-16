@@ -15,7 +15,6 @@ export default function SideNavigationBar({
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
 
-  // Handle initial loading state
   useEffect(() => {
     setIsLoading(false);
   }, []);
@@ -44,7 +43,7 @@ export default function SideNavigationBar({
   ];
 
   if (isLoading) {
-    return null; // Prevent flash of content during initial load
+    return null;
   }
 
   return (
@@ -58,11 +57,11 @@ export default function SideNavigationBar({
         className="fixed top-0 left-0 h-screen overflow-hidden z-10"
         style={{
           background:
-            'linear-gradient(to bottom, rgb(14,0,36), rgb(74,32,138))',
-          boxShadow: '0 0 40px rgba(140,69,255,0.3)',
+            'linear-gradient(to bottom, #3B945E, #2C6E49, #1A4731)',
+          boxShadow: '0 0 40px rgba(59,148,94,0.3)',
         }}
       >
-        <nav className="h-full flex flex-col text-white border-r border-purple-500/20">
+        <nav className="h-full flex flex-col text-white border-r border-[#3B945E]/20">
           <div className="p-4 pb-2 flex justify-between items-center">
             <AnimatePresence mode="wait">
               {expanded && (
@@ -74,9 +73,9 @@ export default function SideNavigationBar({
                 >
                   <Link
                     to="/"
-                    className="text-xl font-bold bg-gradient-to-r from-white to-purple-300 text-transparent bg-clip-text"
+                    className="text-xl font-bold bg-gradient-to-r from-white to-[#ffffff] text-transparent bg-clip-text"
                   >
-                    Orbital Finance
+                    EcoSphere
                   </Link>
                 </motion.div>
               )}
@@ -84,11 +83,11 @@ export default function SideNavigationBar({
             <motion.button
               whileHover={{
                 scale: 1.1,
-                backgroundColor: 'rgba(140,69,255,0.5)',
+                backgroundColor: 'rgba(59,148,94,0.5)',
               }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setExpanded((curr) => !curr)}
-              className="p-1.5 rounded-lg bg-purple-900/50 hover:bg-purple-800/50 transition-colors duration-200 backdrop-blur-sm"
+              className="p-1.5 rounded-lg bg-[#2C6E49]/50 hover:bg-[#3B945E]/50 transition-colors duration-200 backdrop-blur-sm"
             >
               {expanded ? <ChevronFirst /> : <ChevronLast />}
             </motion.button>
@@ -131,15 +130,15 @@ function SidebarItem({ to, icon, text, onClick, active, expanded }) {
             transition-all duration-200 ease-in-out backdrop-blur-sm
             ${
               active
-                ? 'bg-purple-600/50 text-white shadow-lg shadow-purple-500/20'
-                : 'text-purple-200 hover:bg-purple-800/30 hover:text-white'
+                ? 'bg-[#3B945E]/50 text-white shadow-lg shadow-[#3B945E]/20'
+                : 'text-green-200 hover:bg-[#2C6E49]/30 hover:text-white'
             }
           `}
         >
           {active && (
             <motion.div
               layoutId="activeIndicator"
-              className="absolute inset-0 bg-purple-600/50 rounded-md"
+              className="absolute inset-0 bg-[#3B945E]/50 rounded-md"
               initial={false}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
