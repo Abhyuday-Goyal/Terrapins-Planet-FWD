@@ -1,7 +1,6 @@
 'use client';
 
 import Button from './items/Button'; // Ensure the path is correct and the Button component exists
-import starsBg from '../assets/stars.png';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -20,9 +19,10 @@ export const Hero = () => {
 
   return (
     <motion.section
-      className="h-[492px] md:h-[800px] flex items-center overflow-hidden relative [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
+      ref={sectionRef}
+      className="h-[492px] md:h-[800px] flex items-center overflow-hidden relative"
       style={{
-        background: 'linear-gradient(to bottom, #059033, #5b98d6)',
+        background: 'linear-gradient(to bottom, #3B945E, #2C6E49, #1A4731)',
         backgroundPositionY,
       }}
       animate={{
@@ -31,10 +31,14 @@ export const Hero = () => {
       transition={{ repeat: Infinity, duration: 60, ease: 'linear' }}
     >
       {/* Subtle Background Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(5,144,51,0.3)_0%,transparent_70%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(59,148,94,0.3)_0%,transparent_80%)]"></div>
+
+      {/* Fix for Seamless Bottom */}
+      <div className="absolute bottom-0 w-full h-20 bg-gradient-to-b from-transparent to-[#1A4731]"></div>
+
 
       {/* Central Planet */}
-      <div className="absolute h-64 w-64 md:h-96 md:w-96 bg-[#5b98d6] rounded-full border border-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_30px_10px_rgba(5,144,51,0.5)]"></div>
+      <div className="absolute h-64 w-64 md:h-96 md:w-96 bg-[#2C6E49] rounded-full border border-white/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_30px_10px_rgba(59,148,94,0.5)]"></div>
 
       {/* Animated Rings */}
       <motion.div
@@ -50,7 +54,7 @@ export const Hero = () => {
           repeat: Infinity,
           ease: 'linear',
         }}
-        className="absolute h-[344px] w-[344px] md:h-[580px] md:w-[580px] border border-[#5b98d6]/50 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute h-[344px] w-[344px] md:h-[580px] md:w-[580px] border border-[#2C6E49]/50 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       ></motion.div>
       <motion.div
         style={{
@@ -65,7 +69,7 @@ export const Hero = () => {
           repeat: Infinity,
           ease: 'linear',
         }}
-        className="absolute h-[444px] w-[444px] md:h-[780px] md:w-[780px] rounded-full border border-[#059033]/50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute h-[444px] w-[444px] md:h-[780px] md:w-[780px] rounded-full border border-[#3B945E]/50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       ></motion.div>
       <motion.div
         style={{
@@ -104,14 +108,14 @@ export const Hero = () => {
       </motion.div>
 
       <div className="container relative mt-16">
-        <h1 className="text-8xl md:text-[168px] md:leading-none bg-white font-semibold tracking-tighter bg-[radial-gradient(100%_100%_at_top_left,white,white,rgb(5,144,51,.5))] text-transparent bg-clip-text text-center">
+        <h1 className="text-8xl md:text-[168px] md:leading-none bg-white font-semibold tracking-tighter bg-[radial-gradient(100%_100%_at_top_left,white,white,rgb(59,148,94,.5))] text-transparent bg-clip-text text-center">
           EcoSphere AI
         </h1>
         <p className="text-lg md:text-xl text-white/70 mt-5 text-center max-w-xl mx-auto">
           Empowering businesses with AI-driven calls, real-time data, and analysis for smarter growth.
         </p>
         <div className="flex justify-center mt-5 mb-9">
-          <Button href="/home" className="text-white/70">
+          <Button href="/home" className="text-white/70 bg-green-700 hover:bg-green-600">
             Try It!
           </Button>
         </div>
