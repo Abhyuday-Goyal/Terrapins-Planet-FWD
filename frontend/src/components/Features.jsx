@@ -31,7 +31,7 @@ const tabs = [
 
 export const Features = () => {
   return (
-    <section className="py-20 md:py-24 bg-gradient-to-b from-[#059033] to-[#5b98d6]">
+    <section className="py-20 md:py-24 bg-gradient-to-b from-[#3B945E] to-[#2C6E49]">
       <div className="container text-center">
         <h2 className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
           Elevate Your Sustainability Goals

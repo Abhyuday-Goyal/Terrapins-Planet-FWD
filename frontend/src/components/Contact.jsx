@@ -41,7 +41,7 @@ export const Contact = () => {
   const backgroundPositionY = useTransform(
     scrollYProgress,
     [0, 1],
-    [-300, 300],
+    [-300, 300]
   );
 
   const [mouseX, mouseY] = useRelativeMousePosition()(borderDivRef);
@@ -52,12 +52,11 @@ export const Contact = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with the email address, e.g., send it to an API
     console.log('Email submitted:', email);
   };
 
   return (
-    <section className="py-20 md:py-24" ref={sectionRef}>
+    <section className="py-20 md:py-24 bg-gradient-to-b from-[#3B945E] to-[#1E4B35]" ref={sectionRef}>
       <div className="container">
         <motion.div
           ref={borderDivRef}
@@ -72,13 +71,13 @@ export const Contact = () => {
           }}
         >
           <div
-            className="absolute inset-0 bg-[rgb(74,32,138)] bg-blend-overlay [mask-image:radial-gradient(50%_50%_at_50%_35%,black,transparent)] group-hover:opacity-0 transition duration-700"
+            className="absolute inset-0 bg-[#2F6E49] bg-blend-overlay [mask-image:radial-gradient(50%_50%_at_50%_35%,black,transparent)] group-hover:opacity-0 transition duration-700"
             style={{
               backgroundImage: `url(${gridLines})`,
             }}
           ></div>
           <motion.div
-            className="absolute inset-0 bg-[rgb(74,32,138)] bg-blend-overlay opacity-0 group-hover:opacity-100 transition duration-700"
+            className="absolute inset-0 bg-[#1E4B35] bg-blend-overlay opacity-0 group-hover:opacity-100 transition duration-700"
             style={{
               maskImage,
               backgroundImage: `url(${gridLines})`,
@@ -86,10 +85,10 @@ export const Contact = () => {
           ></motion.div>
           <div className="relative">
             <h2 className="text-white text-3xl md:text-6xl max-w-sm mx-auto tracking-tighter text-center font-lg">
-              Orbital Finance
+              EcoSphere AI
             </h2>
             <p className="text-center text-lg md:text-lg max-w-xs mx-auto text-white/70 px-4 mt-5 tracking-tight">
-              Embarking journeys to the stars, one step at a time.
+              Embarking journeys to sustainability, one step at a time.
             </p>
             <div className="mt-8 max-w-md mx-auto px-4">
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -111,7 +110,7 @@ export const Contact = () => {
                   />
                 </div>
                 <div className="flex justify-center">
-                  <Button onClick={handleSubmit} className="text-white/70">
+                  <Button onClick={handleSubmit} className="text-white/70 bg-[#3B945E] hover:bg-[#2C6E49]">
                     Submit
                   </Button>
                 </div>
