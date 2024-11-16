@@ -26,7 +26,6 @@ export const Landing = () => {
         scrollToContact={() => scrollToSection(contactRef)}
       />
       <Hero />
-      <ScrollTicker />
       <div ref={featuresRef}>
         <Features />
       </div>
