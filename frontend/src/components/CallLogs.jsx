@@ -76,7 +76,7 @@ const CallLogItem = ({ log, isExpanded, onToggle }) => {
     <motion.div
       layout="position"
       initial={false}
-      className="backdrop-blur-sm bg-white/5 rounded-lg mb-4 overflow-hidden border border-purple-500/20 shadow-lg shadow-purple-500/10"
+      className="backdrop-blur-sm bg-white/5 rounded-lg mb-4 overflow-hidden border border-[#3B945E]/20 shadow-lg shadow-[#3B945E]/10"
     >
       <motion.div layout="position" className="p-4">
         <div
@@ -92,7 +92,7 @@ const CallLogItem = ({ log, isExpanded, onToggle }) => {
                 >
                   {log.name}
                 </motion.h3>
-                <motion.p layout="position" className="text-sm text-purple-200">
+                <motion.p layout="position" className="text-sm text-[#3B945E]">
                   {log.email}
                 </motion.p>
               </div>
@@ -103,7 +103,7 @@ const CallLogItem = ({ log, isExpanded, onToggle }) => {
                 >
                   {formattedDate}
                 </motion.p>
-                <motion.p layout="position" className="text-sm text-purple-200">
+                <motion.p layout="position" className="text-sm text-[#3B945E]">
                   {formattedTime}
                 </motion.p>
               </div>
@@ -116,7 +116,7 @@ const CallLogItem = ({ log, isExpanded, onToggle }) => {
             transition={{ duration: 0.2 }}
             className="ml-4 w-6 h-6 flex items-center justify-center"
           >
-            <ChevronDown className="text-purple-200 w-5 h-5" />
+            <ChevronDown className="text-[#3B945E] w-5 h-5" />
           </motion.div>
         </div>
 
@@ -155,11 +155,11 @@ const CallLogItem = ({ log, isExpanded, onToggle }) => {
                 },
               }}
             >
-              <div className="bg-purple-900/30 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-purple-200 mb-2">
+              <div className="bg-[#2C6E49]/30 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-[#3B945E] mb-2">
                   Call Summary
                 </h4>
-                <p className="text-sm text-purple-100 leading-relaxed">
+                <p className="text-sm text-white/90 leading-relaxed">
                   {log.summary}
                 </p>
               </div>
@@ -201,20 +201,20 @@ const CallLogs = () => {
       className="min-h-screen w-full"
       style={{
         background:
-          'radial-gradient(75% 75% at center, rgb(140,69,255,.2) 0%, rgb(14,0,36) 100%)',
+          'radial-gradient(75% 75% at center, rgba(59,148,94,0.15) 0%, rgb(26,71,49) 100%)',
       }}
     >
       <div className="p-6 max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-300 text-transparent bg-clip-text">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-[#ffffff] text-transparent bg-clip-text">
               Call Logs
             </h1>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={clearFilters}
-              className="flex items-center px-3 py-2 text-sm text-purple-200 hover:text-white"
+              className="flex items-center px-3 py-2 text-sm text-[#fafafa] hover:text-white"
             >
               <X size={16} className="mr-1" />
               Clear Filters
@@ -224,13 +224,13 @@ const CallLogs = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             <div className="relative col-span-1 sm:col-span-2">
               <Search
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#ffffff]"
                 size={20}
               />
               <input
                 type="text"
                 placeholder="Search by name or email..."
-                className="w-full pl-10 pr-4 py-2 bg-purple-900/20 border border-purple-500/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-purple-300"
+                className="w-full pl-10 pr-4 py-2 bg-[#2C6E49]/20 border border-[#3B945E]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B945E] text-white placeholder-[#ffffff]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -239,14 +239,14 @@ const CallLogs = () => {
             <div className="flex gap-2">
               <input
                 type="date"
-                className="flex-1 px-3 py-2 bg-purple-900/20 border border-purple-500/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+                className="flex-1 px-3 py-2 bg-[#2C6E49]/20 border border-[#3B945E]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffffff] text-white"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
-              <span className="flex items-center text-purple-300">to</span>
+              <span className="flex items-center text-[#ffffff]">to</span>
               <input
                 type="date"
-                className="flex-1 px-3 py-2 bg-purple-900/20 border border-purple-500/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+                className="flex-1 px-3 py-2 bg-[#2C6E49]/20 border border-[#3B945E]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B945E] text-white"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
