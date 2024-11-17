@@ -9,7 +9,6 @@ from alt_scrape_search import query_alternative
 from werkzeug.utils import secure_filename
 from typing import Tuple, Dict, Any
 from ingestion.magic import process_object
-from sql.r2sql import get_answer
 load_dotenv()
 connection_string = os.getenv('DATABASE_URL')
 connection_pool = pool.SimpleConnectionPool(

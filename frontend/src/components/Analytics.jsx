@@ -302,10 +302,10 @@ const EmissionsAnalytics = () => {
   };
 
   const timelineData = {
-    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+    labels: ['1970','1980', '1990', '2000', '2018', '2010', '2020'],
     datasets: [{
-      label: 'Carbon Emissions (MT CO2e)',
-      data: [2800, 3200, 3100, 3600, 3400, 3200, 3800, 4100, 3900, 4300],
+      label: 'Carbon Emissions (B CO2e)',
+      data: [14.9, 19.49, 22.73, 25.51, 33.36, 35.14, 37.79],
       borderColor: 'rgba(74, 189, 126, 0.8)',
       backgroundColor: 'rgba(74, 189, 126, 0.1)',
       fill: true,
@@ -367,7 +367,7 @@ const EmissionsAnalytics = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ChartCard title="Emissions by Type" icon={PieChart}>
-          <div className="h-64">
+            <div className="h-64">
               <Doughnut data={pieChartData} options={chartOptions} />
             </div>
           </ChartCard>
