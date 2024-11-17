@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-
+import psycopg2.pool as pool
+from dotenv import load_dotenv
+load_dotenv()
+connection_string = os.getenv('DATABASE_URL')
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -243,6 +246,67 @@ def upload_image():
 
     return jsonify({'error': 'Something went wrong'}), 500
 
+@app.route('/extract-data', methods=['POST', 'GET'])
+def extract_data():
+    connection_pool = pool.SimpleConnectionPool(
+        1,  # Minimum number of connections in the pool
+        10,  # Maximum number of connections in the pool
+        connection_string
+    )
+    
+    if connection_pool:
+        print("Connection pool created successfully")
+    else:
+        print("connection pool missing")
+        return jsonify({"error": "Database connection failed"}), 500
+        
+    try:
+        conn = connection_pool.getconn()
+        cur = conn.cursor()
+        
+        # Query for recyclable, biodegradable, and both counts
+        cur.execute("""
+            SELECT 
+                COUNT(*) FILTER (WHERE recyclable = true) as recyclable_count,
+                COUNT(*) FILTER (WHERE biodegradable = true) as biodegradable_count,
+                COUNT(*) FILTER (WHERE recyclable = true AND biodegradable = true) as both_count,
+                SUM(emissions) as total_emissions
+            FROM c_company
+        """)
+        count_data = cur.fetchone()
+        print(count_data)
 
+        # Query for emissions histogram
+        cur.execute("""
+            SELECT 
+                CASE 
+                    WHEN emissions <= 2.5 THEN '0-2.5'
+                    WHEN emissions <= 5 THEN '2.5-5'
+                    WHEN emissions <= 7.5 THEN '5-7.5'
+                    ELSE '7.5-10'
+                END as range,
+                COUNT(*) as count
+            FROM c_company
+            GROUP BY range
+            ORDER BY range
+        """)
+        histogram_data = cur.fetchall()
+        return jsonify({
+            "recyclable_count": count_data[0],
+            "biodegradable_count": count_data[1],
+            "both_count": count_data[2],
+            "total_emissions": count_data[3],
+            "histogram": [{"range": row[0], "count": row[1]} for row in histogram_data]
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            connection_pool.putconn(conn)
+    
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
