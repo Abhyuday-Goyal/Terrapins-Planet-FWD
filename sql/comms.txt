@@ -1,0 +1,209 @@
+Problem: Find all items that are both recyclable and biodegradable
+Correct SQL Query: SELECT "item" FROM "a_company" WHERE "recyclable" = true AND "biodegradable" = true;
+
+Problem: Calculate the total mass of all items with emissions greater than the average emissions
+Correct SQL Query: SELECT SUM("mass") FROM "a_company" WHERE "emissions" > (SELECT AVG("emissions") FROM "a_company");
+
+Problem: List the top 5 heaviest items along with their mass
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" ORDER BY "mass" DESC LIMIT 5;
+
+Problem: Find items where the comments contain the word 'defect' (case insensitive)
+Correct SQL Query: SELECT "item", "comments" FROM "a_company" WHERE LOWER("comments") LIKE '%defect%';
+
+Problem: Calculate the average mass for recyclable vs non-recyclable items
+Correct SQL Query: SELECT "recyclable", AVG("mass") as "avg_mass" FROM "a_company" GROUP BY "recyclable";
+
+Problem: Find items with above-average emissions and show their percentage above average
+Correct SQL Query: SELECT "item", "emissions", ROUND(("emissions" / (SELECT AVG("emissions") FROM "a_company") - 1) * 100, 2) as "percent_above_avg" FROM "a_company" WHERE "emissions" > (SELECT AVG("emissions") FROM "a_company");
+
+Problem: Count how many items fall into each combination of recyclable and biodegradable states
+Correct SQL Query: SELECT "recyclable", "biodegradable", COUNT(*) as "item_count" FROM "a_company" GROUP BY "recyclable", "biodegradable";
+
+Problem: Calculate the total emissions for items grouped by their recyclability status
+Correct SQL Query: SELECT "recyclable", SUM("emissions") as "total_emissions" FROM "a_company" GROUP BY "recyclable";
+
+Problem: Find the items with the highest emissions to mass ratio
+Correct SQL Query: SELECT "item", ROUND(("emissions"/"mass")::numeric, 2) as "efficiency_ratio" FROM "a_company" WHERE "mass" > 0 ORDER BY "efficiency_ratio" DESC LIMIT 5;
+
+Problem: Calculate the moving average of emissions over the last 3 items ordered by mass
+Correct SQL Query: SELECT "item", "emissions", AVG("emissions") OVER (ORDER BY "mass" ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) as "moving_avg" FROM "a_company";
+
+Problem: Find items where the mass is more than one standard deviation above the mean
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" > (SELECT AVG("mass") + STDDEV("mass") FROM "a_company");
+
+Problem: Calculate the percentage of total mass contributed by each item
+Correct SQL Query: SELECT "item", ROUND(("mass"::numeric / SUM("mass") OVER()) * 100, 2) as "mass_percentage" FROM "a_company";
+
+Problem: Find items that have above-average mass and below-average emissions
+Correct SQL Query: SELECT "item" FROM "a_company" WHERE "mass" > (SELECT AVG("mass") FROM "a_company") AND "emissions" < (SELECT AVG("emissions") FROM "a_company");
+
+Problem: Calculate the quartile distribution of emissions
+Correct SQL Query: SELECT "item", "emissions", NTILE(4) OVER (ORDER BY "emissions") as "emission_quartile" FROM "a_company";
+
+Problem: Find the median mass for each recyclability category
+Correct SQL Query: SELECT "recyclable", PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "mass") as "median_mass" FROM "a_company" GROUP BY "recyclable";
+
+Problem: Calculate the running total of emissions ordered by mass
+Correct SQL Query: SELECT "item", "mass", "emissions", SUM("emissions") OVER (ORDER BY "mass") as "running_total" FROM "a_company";
+
+Problem: Find items with exactly the same mass but different emission values
+Correct SQL Query: SELECT a1."item", a2."item" as "matching_item", a1."mass", a1."emissions", a2."emissions" FROM "a_company" a1 JOIN "a_company" a2 ON a1."mass" = a2."mass" AND a1."id" < a2."id" AND a1."emissions" != a2."emissions";
+
+Problem: Calculate the emission density (emissions per unit mass) for each item
+Correct SQL Query: SELECT "item", CASE WHEN "mass" = 0 THEN NULL ELSE ROUND(("emissions"/"mass")::numeric, 2) END as "emission_density" FROM "a_company" ORDER BY "emission_density" DESC NULLS LAST;
+
+Problem: Find items where the comments mention either 'good' or 'excellent' quality
+Correct SQL Query: SELECT "item", "comments" FROM "a_company" WHERE LOWER("comments") ~ '(good|excellent)';
+
+Problem: Calculate the percentage of biodegradable items in each mass category (light, medium, heavy)
+Correct SQL Query: SELECT mass_category, ROUND((COUNT(CASE WHEN "biodegradable" THEN 1 END)::numeric / COUNT(*) * 100), 2) as biodegradable_percentage FROM (SELECT *, CASE WHEN "mass" < 100 THEN 'light' WHEN "mass" < 500 THEN 'medium' ELSE 'heavy' END as mass_category FROM "a_company") t GROUP BY mass_category;
+
+Problem: Calculate the exponential moving average of emissions with a 0.3 weight factor
+Correct SQL Query: SELECT "id", "emissions", AVG("emissions") OVER (ORDER BY "id" ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) * 0.3 + "emissions" * 0.7 as "exp_moving_avg" FROM "a_company";
+
+Problem: Find items that have emissions values as local maxima compared to their neighbors
+Correct SQL Query: SELECT "item", "emissions" FROM "a_company" a WHERE "emissions" > ALL (SELECT "emissions" FROM "a_company" b WHERE a."id" != b."id" AND ABS(a."mass" - b."mass") <= 10);
+
+Problem: Create a histogram of mass distribution with 10 buckets
+Correct SQL Query: SELECT width_bucket("mass", min_mass, max_mass, 9) as bucket, count(*), min("mass") as min_mass, max("mass") as max_mass FROM "a_company" CROSS JOIN (SELECT MIN("mass") as min_mass, MAX("mass") as max_mass FROM "a_company") bounds GROUP BY bucket ORDER BY bucket;
+
+Problem: Calculate the Pearson correlation coefficient between mass and emissions
+Correct SQL Query: SELECT (AVG("mass" * "emissions") - AVG("mass") * AVG("emissions")) / (STDDEV("mass") * STDDEV("emissions")) as correlation FROM "a_company";
+
+Problem: Identify items that are statistical outliers (beyond 1.5 IQR) in terms of emissions
+Correct SQL Query: WITH stats AS (SELECT percentile_cont(0.25) WITHIN GROUP (ORDER BY "emissions") as q1, percentile_cont(0.75) WITHIN GROUP (ORDER BY "emissions") as q3 FROM "a_company") SELECT "item", "emissions" FROM "a_company", stats WHERE "emissions" < q1 - 1.5 * (q3 - q1) OR "emissions" > q3 + 1.5 * (q3 - q1);
+
+Problem: Generate a cumulative distribution function for mass values
+Correct SQL Query: SELECT "mass", COUNT(*) OVER (ORDER BY "mass")/CAST(COUNT(*) OVER () as float) as "cdf" FROM "a_company";
+
+Problem: Find items with alternating high/low emissions pattern compared to their neighbors
+Correct SQL Query: SELECT a."item", a."emissions" FROM "a_company" a WHERE EXISTS (SELECT 1 FROM "a_company" b WHERE a."emissions" > b."emissions" AND EXISTS (SELECT 1 FROM "a_company" c WHERE b."emissions" < c."emissions" AND a."id" > b."id" AND b."id" > c."id"));
+
+Problem: Calculate the rolling sum of emissions for items within 10% of each item's mass
+Correct SQL Query: SELECT a."item", a."mass", SUM(b."emissions") as "nearby_emissions_sum" FROM "a_company" a LEFT JOIN "a_company" b ON ABS(a."mass" - b."mass")/GREATEST(a."mass", 1) <= 0.1 GROUP BY a."item", a."mass";
+
+Problem: Find the longest streak of consecutive items with increasing emissions
+Correct SQL Query: WITH runs AS (SELECT "item", "emissions", COUNT(*) OVER (ORDER BY "emissions") - ROW_NUMBER() OVER (ORDER BY "emissions") as grp FROM "a_company") SELECT COUNT(*) as streak_length FROM runs GROUP BY grp ORDER BY streak_length DESC LIMIT 1;
+
+Problem: Calculate the entropy of the mass distribution using 5 equal-width bins
+Correct SQL Query: WITH bins AS (SELECT width_bucket("mass", MIN("mass"), MAX("mass"), 5) as bin, COUNT(*) as cnt, COUNT(*) OVER () as total FROM "a_company" GROUP BY bin) SELECT -SUM((cnt::float/total) * ln(cnt::float/total)) as entropy FROM bins;
+
+Problem: Find items forming a pyramid pattern where middle item has highest mass
+Correct SQL Query: SELECT b."item" as left_item, a."item" as peak_item, c."item" as right_item FROM "a_company" a JOIN "a_company" b ON a."mass" > b."mass" JOIN "a_company" c ON a."mass" > c."mass" AND b."id" < a."id" AND c."id" > a."id" ORDER BY a."mass" DESC;
+
+Problem: Calculate the weighted average of emissions where weight is inverse proportional to mass
+Correct SQL Query: SELECT SUM("emissions" * (1/"mass"::float))/SUM(1/"mass"::float) as weighted_avg_emissions FROM "a_company" WHERE "mass" > 0;
+
+Problem: Find items that represent local minima in terms of both mass and emissions
+Correct SQL Query: SELECT a."item" FROM "a_company" a WHERE NOT EXISTS (SELECT 1 FROM "a_company" b WHERE b."mass" < a."mass" AND b."emissions" < a."emissions" AND ABS(a."id"::int - b."id"::int) = 1);
+
+Problem: Calculate the rate of change of emissions per unit mass for consecutive items
+Correct SQL Query: SELECT a."item", (b."emissions" - a."emissions")/(b."mass" - a."mass") as "rate_of_change" FROM "a_company" a JOIN "a_company" b ON a."id" < b."id" WHERE b."mass" - a."mass" != 0 ORDER BY ABS((b."emissions" - a."emissions")/(b."mass" - a."mass")) DESC;
+
+Problem: Identify clusters of items with similar mass and emissions using a simple distance metric
+Correct SQL Query: WITH distances AS (SELECT a."id", a."item", COUNT(*) as cluster_size FROM "a_company" a JOIN "a_company" b ON SQRT(POWER(a."mass"-b."mass",2) + POWER(a."emissions"-b."emissions",2)) < 100 GROUP BY a."id", a."item") SELECT "item", cluster_size FROM distances ORDER BY cluster_size DESC;
+
+Problem: Calculate the moving coefficient of variation for emissions within a 5-item window
+Correct SQL Query: SELECT "item", "emissions", STDDEV("emissions") OVER w / NULLIF(AVG("emissions") OVER w, 0) as "cv" FROM "a_company" WINDOW w AS (ORDER BY "id" ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING);
+
+Problem: Find items where the mass follows a Fibonacci-like pattern (each mass approximately sum of two previous)
+Correct SQL Query: SELECT a."item" as first, b."item" as second, c."item" as third FROM "a_company" a JOIN "a_company" b ON b."id" > a."id" JOIN "a_company" c ON c."id" > b."id" WHERE ABS(c."mass" - (a."mass" + b."mass")) < 10 ORDER BY a."id";
+
+Problem: Calculate the autocorrelation of emissions at lag 1
+Correct SQL Query: WITH lagged AS (SELECT "emissions", LAG("emissions") OVER (ORDER BY "id") as lagged_emissions FROM "a_company") SELECT CORR("emissions", lagged_emissions) FROM lagged;
+
+Problem: Identify items that form a geometric sequence in terms of mass (within 5% tolerance)
+Correct SQL Query: WITH ratios AS (SELECT a."item" as item1, b."item" as item2, c."item" as item3, b."mass"::float/a."mass" as r1, c."mass"::float/b."mass" as r2 FROM "a_company" a JOIN "a_company" b ON b."id" > a."id" JOIN "a_company" c ON c."id" > b."id") SELECT * FROM ratios WHERE ABS(r1 - r2)/r1 < 0.05;
+
+Problem: Calculate the rolling median of emissions for groups of similar mass items
+Correct SQL Query: SELECT "item", "mass", PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "emissions") OVER (PARTITION BY width_bucket("mass", min_mass, max_mass, 10)) as median_emissions FROM "a_company" CROSS JOIN (SELECT MIN("mass") as min_mass, MAX("mass") as max_mass FROM "a_company") bounds;
+
+Problem: Find all items with mass greater than 1000
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" > 1000;
+
+Problem: Count how many items are recyclable
+Correct SQL Query: SELECT COUNT(*) as recyclable_count FROM "a_company" WHERE "recyclable" = true;
+
+Problem: List items sorted by emissions from highest to lowest
+Correct SQL Query: SELECT "item", "emissions" FROM "a_company" ORDER BY "emissions" DESC;
+
+Problem: Calculate the average mass of all items
+Correct SQL Query: SELECT ROUND(AVG("mass")::numeric, 2) as average_mass FROM "a_company";
+
+Problem: Find items that have 'plastic' in their comments
+Correct SQL Query: SELECT "item", "comments" FROM "a_company" WHERE "comments" ILIKE '%plastic%';
+
+Problem: Get the top 10 items with highest amount
+Correct SQL Query: SELECT "item", "amount" FROM "a_company" ORDER BY "amount" DESC LIMIT 10;
+
+Problem: Count items grouped by biodegradable status
+Correct SQL Query: SELECT "biodegradable", COUNT(*) as item_count FROM "a_company" GROUP BY "biodegradable";
+
+Problem: Find items with mass between 500 and 1000
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" BETWEEN 500 AND 1000;
+
+Problem: Calculate total emissions for recyclable items
+Correct SQL Query: SELECT SUM("emissions") as total_recyclable_emissions FROM "a_company" WHERE "recyclable" = true;
+
+Problem: Find items with no comments
+Correct SQL Query: SELECT "item" FROM "a_company" WHERE "comments" IS NULL OR "comments" = '';
+
+Problem: List items that are either recyclable or biodegradable (or both)
+Correct SQL Query: SELECT "item" FROM "a_company" WHERE "recyclable" = true OR "biodegradable" = true;
+
+Problem: Calculate the minimum and maximum emissions
+Correct SQL Query: SELECT MIN("emissions") as min_emissions, MAX("emissions") as max_emissions FROM "a_company";
+
+Problem: Find items with mass above average
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" > (SELECT AVG("mass") FROM "a_company");
+
+Problem: Count items in different mass ranges (0-500, 501-1000, >1000)
+Correct SQL Query: SELECT CASE WHEN "mass" <= 500 THEN '0-500' WHEN "mass" <= 1000 THEN '501-1000' ELSE '>1000' END as mass_range, COUNT(*) FROM "a_company" GROUP BY mass_range;
+
+Problem: List items with second highest emissions
+Correct SQL Query: SELECT "item", "emissions" FROM "a_company" WHERE "emissions" = (SELECT DISTINCT "emissions" FROM "a_company" ORDER BY "emissions" DESC LIMIT 1 OFFSET 1);
+
+Problem: Find items where mass equals emissions
+Correct SQL Query: SELECT "item", "mass", "emissions" FROM "a_company" WHERE "mass" = "emissions"::integer;
+
+Problem: Calculate average amount for each recyclability status
+Correct SQL Query: SELECT "recyclable", ROUND(AVG("amount")::numeric, 2) as avg_amount FROM "a_company" GROUP BY "recyclable";
+
+Problem: Find items with mass greater than twice the average mass
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" > 2 * (SELECT AVG("mass") FROM "a_company");
+
+Problem: List top 5 items with lowest emissions
+Correct SQL Query: SELECT "item", "emissions" FROM "a_company" WHERE "emissions" > 0 ORDER BY "emissions" ASC LIMIT 5;
+
+Problem: Count items where comments contain the word 'quality'
+Correct SQL Query: SELECT COUNT(*) as quality_mentions FROM "a_company" WHERE LOWER("comments") LIKE '%quality%';
+
+Problem: Find items with exactly 1000 mass
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" = 1000;
+
+Problem: Calculate total mass for each combination of recyclable and biodegradable
+Correct SQL Query: SELECT "recyclable", "biodegradable", SUM("mass") as total_mass FROM "a_company" GROUP BY "recyclable", "biodegradable";
+
+Problem: Find items with above average emissions but below average mass
+Correct SQL Query: SELECT "item" FROM "a_company" WHERE "emissions" > (SELECT AVG("emissions") FROM "a_company") AND "mass" < (SELECT AVG("mass") FROM "a_company");
+
+Problem: List items where the amount is between 100 and 500
+Correct SQL Query: SELECT "item", "amount" FROM "a_company" WHERE "amount" BETWEEN 100 AND 500;
+
+Problem: Calculate the total number of items and average mass
+Correct SQL Query: SELECT COUNT(*) as total_items, ROUND(AVG("mass")::numeric, 2) as avg_mass FROM "a_company";
+
+Problem: Find items with comments containing numbers
+Correct SQL Query: SELECT "item", "comments" FROM "a_company" WHERE "comments" ~ '[0-9]';
+
+Problem: Calculate the percentage of total emissions for each item
+Correct SQL Query: SELECT "item", ROUND(("emissions" / SUM("emissions") OVER()) * 100, 2) as emission_percentage FROM "a_company";
+
+Problem: List items where mass is divisible by 100
+Correct SQL Query: SELECT "item", "mass" FROM "a_company" WHERE "mass" % 100 = 0;
+
+Problem: Find items with the same amount but different masses
+Correct SQL Query: SELECT a."item", b."item" as matching_item, a."amount", a."mass", b."mass" FROM "a_company" a JOIN "a_company" b ON a."amount" = b."amount" AND a."id" < b."id" AND a."mass" != b."mass";
+
+Problem: Calculate average emissions for items with comments vs items without comments
+Correct SQL Query: SELECT CASE WHEN "comments" IS NULL OR "comments" = '' THEN 'No Comments' ELSE 'Has Comments' END as comment_status, ROUND(AVG("emissions")::numeric, 2) as avg_emissions FROM "a_company" GROUP BY CASE WHEN "comments" IS NULL OR "comments" = '' THEN 'No Comments' ELSE 'Has Comments' END;
