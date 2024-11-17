@@ -52,16 +52,16 @@ const Analytics = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       updateSelectedAssets();
-    }, 30000); // Update every 30 seconds
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [customerData]);
 
   const StatCard = ({ title, value, icon: Icon }) => (
-    <div className="bg-gray-800/50 backdrop-blur-lg p-8 rounded-lg border border-purple-500/20 shadow-lg h-full">
+    <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg border border-green-700 shadow-lg h-full">
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-purple-200/70 text-base font-medium mb-3">
+          <p className="text-green-200/70 text-base font-medium mb-3">
             {title}
           </p>
           <h3 className="text-4xl font-bold text-white mt-2">
@@ -72,8 +72,8 @@ const Analytics = () => {
               : value}
           </h3>
         </div>
-        <div className="p-4 bg-purple-500/20 rounded-lg">
-          <Icon className="w-8 h-8 text-purple-300" />
+        <div className="p-4 bg-green-500/20 rounded-lg">
+          <Icon className="w-8 h-8 text-green-300" />
         </div>
       </div>
     </div>
@@ -84,7 +84,6 @@ const Analytics = () => {
       (sum, user) => sum + user.purchases.length + user.stocks.length,
       0,
     );
-    // Fix credit-to-income ratio calculation
     const creditToIncomeRatio =
       data.reduce((sum, user) => {
         const ratio = (user.credit || 0) / (user.income || 1);
@@ -139,10 +138,10 @@ const Analytics = () => {
   const feedbackData = useMemo(() => {
     const sentiments = processFeedbackData();
     const colors = [
-      'rgba(236, 72, 153, 0.8)',
-      'rgba(168, 85, 247, 0.8)',
-      'rgba(59, 130, 246, 0.8)',
-      'rgba(99, 102, 241, 0.8)',
+      'rgba(34, 197, 94, 0.8)',
+      'rgba(21, 128, 61, 0.8)',
+      'rgba(16, 185, 129, 0.8)',
+      'rgba(6, 95, 70, 0.8)',
     ];
     return {
       labels: Object.keys(sentiments),
@@ -205,11 +204,14 @@ const Analytics = () => {
   }, [customerData]);
 
   const assetEngagementData = useMemo(() => {
-    const randomColors = selectedAssets.map(() => {
-      return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
-        Math.random() * 255,
-      )}, ${Math.floor(Math.random() * 255)}, 0.8)`;
-    });
+    const greenShades = [
+      'rgba(34, 197, 94, 0.8)',
+      'rgba(21, 128, 61, 0.8)',
+      'rgba(16, 185, 129, 0.8)',
+      'rgba(6, 95, 70, 0.8)',
+      'rgba(4, 120, 87, 0.8)',
+    ];
+    
     return {
       labels: incomeBrackets,
       datasets: selectedAssets.map((asset, index) => ({
@@ -217,7 +219,7 @@ const Analytics = () => {
         data: incomeBrackets.map(
           (bracket) => assetEngagement[bracket][asset] || 0,
         ),
-        backgroundColor: randomColors[index],
+        backgroundColor: greenShades[index % greenShades.length],
         borderColor: 'rgba(255, 255, 255, 0.2)',
         borderWidth: 1,
       })),
@@ -226,23 +228,23 @@ const Analytics = () => {
 
   if (customerData.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
-        <div className="animate-pulse text-purple-200">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(75%_75%_at_center,rgba(59,148,94,0.15)_0%,rgb(26,71,49)_100%)]">
+        <div className="animate-pulse text-green-200">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+    <div className="min-h-screen bg-[radial-gradient(75%_75%_at_center,rgba(59,148,94,0.15)_0%,rgb(26,71,49)_100%)]">
       <div className="relative h-screen flex flex-col">
-        <div className="absolute inset-0 bg-[radial-gradient(75%_75%_at_center,rgb(236,72,153,0.15)_15%,rgb(14,0,36,0.5)_78%,transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(75%_75%_at_center,rgba(34,197,94,0.15)_15%,rgba(26,71,49,0.5)_78%,transparent)]" />
         <div className="container mx-auto px-8 py-6 relative flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-400 mt-10">
+              <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-green-400 mt-10">
                 Financial Insights
               </h1>
-              <p className="text-purple-200/70 mt-2 text-lg">
+              <p className="text-green-200/70 mt-2 text-lg">
                 Real-time analytics and performance metrics
               </p>
             </div>
@@ -272,12 +274,12 @@ const Analytics = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-[400px]">
-            <div className="bg-gray-800/50 backdrop-blur-lg p-8 rounded-lg border border-purple-500/20 shadow-lg">
+            <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg border border-green-700 shadow-lg">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-purple-100">
+                <h2 className="text-2xl font-semibold text-green-100">
                   Customer Satisfaction
                 </h2>
-                <span className="text-pink-400 text-sm font-medium px-3 py-1 bg-pink-400/10 rounded-full">
+                <span className="text-green-400 text-sm font-medium px-3 py-1 bg-green-400/10 rounded-full">
                   {customerData.length} Users
                 </span>
               </div>
@@ -291,7 +293,7 @@ const Analytics = () => {
                       legend: {
                         position: 'bottom',
                         labels: {
-                          color: 'rgb(216, 180, 254)',
+                          color: 'rgb(187, 247, 208)',
                           padding: 20,
                           font: {
                             size: 12,
@@ -304,12 +306,12 @@ const Analytics = () => {
               </div>
             </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-lg p-8 rounded-lg border border-purple-500/20 shadow-lg">
+            <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg border border-green-700 shadow-lg">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-purple-100">
+                <h2 className="text-2xl font-semibold text-green-100">
                   Asset Engagement
                 </h2>
-                <span className="text-pink-400 text-sm font-medium px-3 py-1 bg-pink-400/10 rounded-full">
+                <span className="text-green-400 text-sm font-medium px-3 py-1 bg-green-400/10 rounded-full">
                   By Income Level
                 </span>
               </div>
@@ -325,7 +327,7 @@ const Analytics = () => {
                           color: 'rgba(255, 255, 255, 0.1)',
                         },
                         ticks: {
-                          color: 'rgb(216, 180, 254)',
+                          color: 'rgb(187, 247, 208)',
                           font: {
                             size: 11,
                           },
@@ -337,7 +339,7 @@ const Analytics = () => {
                           color: 'rgba(255, 255, 255, 0.1)',
                         },
                         ticks: {
-                          color: 'rgb(216, 180, 254)',
+                          color: 'rgb(187, 247, 208)',
                           font: {
                             size: 11,
                           },
@@ -348,7 +350,7 @@ const Analytics = () => {
                       legend: {
                         position: 'bottom',
                         labels: {
-                          color: 'rgb(216, 180, 254)',
+                          color: 'rgb(187, 247, 208)',
                           padding: 20,
                           font: {
                             size: 12,

@@ -33,7 +33,7 @@ export default function SideNavigationBar({
     {
       path: '/calllogs',
       icon: <FiPhoneCall className="stroke-[1.5]" />,
-      text: 'Call Logs',
+      text: 'Market Place',
     },
     {
       path: '/analytics',

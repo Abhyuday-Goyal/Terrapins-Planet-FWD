@@ -10,7 +10,7 @@ import Landing from './Pages/Landing';
 import Home from './Pages/Home';
 import ChatBot from './components/ChatBot';
 import SideNavigationBar from './components/SideNavBar';
-import CallLogs from './components/CallLogs';
+import CallLogs from './components/Marketplace';
 import Analytics from './components/Analytics';
 
 // Wrapper component to check the current route
