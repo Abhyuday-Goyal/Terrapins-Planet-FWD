@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Dashboard from '../components/Dashboard';
 import Analytics from '../components/Analytics';
-import CallLogs from '../components/CallLogs';
+import CallLogs from '../components/Marketplace';
 import ChatBot from '../components/ChatBot';
 
 function Home() {
