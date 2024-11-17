@@ -347,6 +347,25 @@ marketplace_buy_listings = [
     },
 ]
 
+activities = [
+    {"id": 1, "activity": "Reforestation Projects", "credits": 100, "description": "Planting trees to restore forests and offset carbon emissions."},
+    {"id": 2, "activity": "Switching to Renewable Energy", "credits": 80, "description": "Transitioning to solar, wind, or other renewable energy sources."},
+    {"id": 3, "activity": "Implementing Recycling Programs", "credits": 50, "description": "Setting up effective recycling systems to reduce waste."},
+    {"id": 4, "activity": "Using Electric Vehicles", "credits": 60, "description": "Reducing emissions by adopting electric vehicles."},
+    {"id": 5, "activity": "Adopting Zero-Waste Practices", "credits": 40, "description": "Minimizing waste through efficient resource usage."},
+    {"id": 6, "activity": "Installing Solar Panels", "credits": 70, "description": "Generating clean energy with rooftop solar panels."},
+    {"id": 7, "activity": "Investing in Wind Farms", "credits": 90, "description": "Supporting wind energy projects for renewable power."},
+    {"id": 8, "activity": "Upgrading to Energy-Efficient Appliances", "credits": 30, "description": "Replacing old appliances with energy-efficient models."},
+    {"id": 9, "activity": "Composting Organic Waste", "credits": 25, "description": "Turning organic waste into compost for soil improvement."},
+    {"id": 10, "activity": "Supporting Carbon Capture Initiatives", "credits": 110, "description": "Funding projects that capture and store carbon emissions."},
+    {"id": 11, "activity": "Participating in Tree-Planting Campaigns", "credits": 45, "description": "Engaging in community-driven tree-planting activities."},
+    {"id": 12, "activity": "Promoting Bicycle Usage", "credits": 35, "description": "Encouraging cycling as an eco-friendly transportation mode."},
+    {"id": 13, "activity": "Switching to LED Lighting", "credits": 20, "description": "Saving energy by replacing traditional bulbs with LED lights."},
+    {"id": 14, "activity": "Building Green Infrastructure", "credits": 100, "description": "Developing eco-friendly buildings and green public spaces."},
+    {"id": 15, "activity": "Educating Communities on Sustainability", "credits": 50, "description": "Raising awareness on sustainable practices and their benefits."}
+]
+
+
 
 # Endpoint for SELL listings
 @app.route('/marketplace/sell-listings', methods=['GET'])
@@ -357,6 +376,11 @@ def get_sell_listings():
 @app.route('/marketplace/buy-listings', methods=['GET'])
 def get_buy_listings():
     return jsonify(marketplace_buy_listings), 200
+
+# Endpoint for Activities
+@app.route('/activities', methods=['GET'])
+def get_activities():
+    return jsonify(activities), 200
 
 @app.route('/extract-data', methods=['POST', 'GET'])
 def extract_data():
