@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import psycopg2.pool as pool
 from dotenv import load_dotenv
+from alt_scrape_search import query_alternative
 load_dotenv()
 connection_string = os.getenv('DATABASE_URL')
 app = Flask(__name__)
@@ -389,7 +390,6 @@ def extract_data():
         10,  # Maximum number of connections in the pool
         connection_string
     )
-    
     if connection_pool:
         print("Connection pool created successfully")
     else:
@@ -406,11 +406,22 @@ def extract_data():
                 COUNT(*) FILTER (WHERE recyclable = true) as recyclable_count,
                 COUNT(*) FILTER (WHERE biodegradable = true) as biodegradable_count,
                 COUNT(*) FILTER (WHERE recyclable = true AND biodegradable = true) as both_count,
-                SUM(emissions) as total_emissions
-            FROM c_company
+                SUM(mass * emissions) as total_emissions
+            FROM a_company
         """)
         count_data = cur.fetchone()
         print(count_data)
+        
+        # Query for top 5 items with the highest emissions
+        cur.execute("""
+        SELECT item, mass * emissions as total_emissions
+        FROM a_company
+        ORDER BY total_emissions DESC
+        LIMIT 6
+        """)
+        top_items = cur.fetchall()
+        top_items_list = [{"item": item[0], "emissions": item[1]} for item in top_items]  # Convert to list of dicts
+        print("Top items are:", top_items_list)
 
 
         # Query for emissions histogram
@@ -423,7 +434,7 @@ def extract_data():
                     ELSE '7.5-10'
                 END as range,
                 COUNT(*) as count
-            FROM c_company
+            FROM a_company
             GROUP BY range
             ORDER BY range
         """)
@@ -433,7 +444,8 @@ def extract_data():
             "biodegradable_count": count_data[1],
             "both_count": count_data[2],
             "total_emissions": count_data[3],
-            "histogram": [{"range": row[0], "count": row[1]} for row in histogram_data]
+            "top_items": top_items_list,
+            "histogram": [{"range": row[0], "count": row[1]} for row in histogram_data],
         })
         
     except Exception as e:
@@ -444,6 +456,25 @@ def extract_data():
             cur.close()
         if conn:
             connection_pool.putconn(conn)
-    
+@app.route('/query-alternative', methods=['POST'])
+def get_alternative():
+    data = request.json
+    if not data or 'product' not in data or 'emissions' not in data:
+        return jsonify({"error": "Missing product or emissions data"}), 400
+        
+    try:
+        product = data['product']
+        emissions = data['emissions']
+        
+        # Call the imported query_alternative function
+        result = query_alternative(product, emissions)
+        
+        return jsonify({
+            "success": True,
+            "alternatives": result
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
