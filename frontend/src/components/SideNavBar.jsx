@@ -24,7 +24,7 @@ export default function SideNavigationBar({
   }, [expanded, onExpandedChange]);
 
   const navigationItems = [
-    { path: '/home', icon: <FiHome className="stroke-[1.5]" />, text: 'Home' },
+    { path: '/home', icon: <FiHome className="stroke-[1.5]" />, text: 'Inventory' },
     {
       path: '/chatbot',
       icon: <TbMessageChatbot className="stroke-[1.5]" />,

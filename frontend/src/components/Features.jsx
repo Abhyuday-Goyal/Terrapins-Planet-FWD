@@ -4,24 +4,24 @@ import product from '../assets/product.png';
 
 const tabs = [
   {
-    icon: '/assets/lottie/graph.lottie',
-    title: 'User-friendly Dashboard',
-    isNew: false,
+    icon: 'best.lottie',
+    title: 'Snap and Add',
+    isNew: true,
     backgroundPositionX: 0,
     backgroundPositionY: 0,
     backgroundSizeX: 150,
   },
   {
-    icon: '/assets/lottie/speed.lottie',
-    title: 'Real-time Response',
+    icon: '/lottie/nsp.json',
+    title: 'Advanced Analytics and Natural Language Querying',
     isNew: false,
     backgroundPositionX: 98,
     backgroundPositionY: 100,
     backgroundSizeX: 135,
   },
   {
-    icon: '/assets/lottie/Animation.lottie',
-    title: 'Smart Manager',
+    icon: '/lottie/Animation.lottie',
+    title: 'Carbon Marketplace',
     isNew: true,
     backgroundPositionX: 100,
     backgroundPositionY: 27,
@@ -50,8 +50,10 @@ export const Features = () => {
               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-white/20 border border-white/20">
                 <DotLottiePlayer
                   src={tab.icon}
-                  className="h-6 w-6"
                   autoplay
+                  loop
+                  className="h-10 w-10"
+                  style={{ width: '100%' }}
                 />
               </div>
               <div className="text-left">

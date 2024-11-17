@@ -160,7 +160,3 @@ def query_alternative(name, emissions):
     
     alt= response.choices[0].message.parsed
     return alt.name, alt.emissions, alt.description
-
-print(query_alternative("plastic bag", 0.2))
-   
-    

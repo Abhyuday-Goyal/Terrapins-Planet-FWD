@@ -4,13 +4,14 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate
 } from 'react-router-dom';
 import './App.css';
 import Landing from './Pages/Landing';
 import Home from './Pages/Home';
 import ChatBot from './components/ChatBot';
 import SideNavigationBar from './components/SideNavBar';
-import CallLogs from './components/Marketplace';
+import Marketplace from './components/Marketplace'; // Changed from CallLogs
 import Analytics from './components/Analytics';
 
 // Wrapper component to check the current route
@@ -23,6 +24,7 @@ const AppContent = () => {
     return (
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
   }
@@ -31,6 +33,7 @@ const AppContent = () => {
   return (
     <div className="flex min-h-screen">
       <SideNavigationBar
+        expanded={expanded} // Add this prop
         onSectionChange={(section) => console.log(section)}
         onExpandedChange={setExpanded}
       />
@@ -42,8 +45,9 @@ const AppContent = () => {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/chatbot" element={<ChatBot />} />
-          <Route path="/calllogs" element={<CallLogs />} />
+          <Route path="/calllogs" element={<Marketplace />} /> {/* Changed from calllogs */}
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </main>
     </div>

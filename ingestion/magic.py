@@ -279,7 +279,7 @@ def process_object(image_path):
         response_format=RowEntry
     )
     entry= response.choices[0].message.parsed
-    insert_row(entry.item, entry.mass, entry.recyclable, entry.biodegradable, entry.amount, entry.comments, entry.emissions)
+    insert_row(entry.item, entry.mass/1000, entry.recyclable, entry.biodegradable, entry.amount, entry.comments, entry.emissions)
     return entry.Desscription
 
 if __name__ == "__main__":
