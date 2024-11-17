@@ -49,17 +49,10 @@ const ChatBot = () => {
 
       const data = await response.json();
 
-      if (data.error) {
-        setMessages((prev) => [
-          ...prev,
-          { id: Date.now(), type: 'bot', content: data.error },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { id: Date.now(), type: 'bot', content: data.message || JSON.stringify(data) },
-        ]);
-      }
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), type: 'bot', content: data.message || 'Unexpected response' },
+      ]);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
@@ -100,22 +93,15 @@ const ChatBot = () => {
 
       const data = await response.json();
 
-      if (data.error) {
-        setMessages((prev) => [
-          ...prev,
-          { id: Date.now(), type: 'bot', content: 'Failed to process the image. Please try again.' },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { id: Date.now(), type: 'bot', content: data.message || 'Image processed successfully.' },
-        ]);
-      }
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), type: 'bot', content: data.message || 'Image uploaded successfully.' },
+      ]);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), type: 'bot', content: 'Failed to process the image. Please try again.' },
-        ]);
+        { id: Date.now(), type: 'bot', content: 'Failed to upload the image. Please try again.' },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -140,7 +126,7 @@ const ChatBot = () => {
             className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
               isBot
                 ? 'bg-gradient-to-br from-[#3B945E] to-[#2C6E49] mr-2'
-                : 'bg-gradient-to-br from-[#2C6E49] to-[#1A4731] ml-2'
+                : 'bg-gradient-to-br from-[#2C6E49] to-[#3B945E] ml-2'
             } shadow-lg`}
           >
             {isBot ? (
@@ -152,8 +138,8 @@ const ChatBot = () => {
           <div
             className={`p-4 rounded-lg ${
               isBot
-                ? 'bg-white/10 text-white border border-[#3B945E]/20'
-                : 'bg-gradient-to-br from-[#2C6E49]/20 to-[#1A4731]/20 text-white border border-[#3B945E]/20'
+                ? 'bg-white/10 text-white border border-white/10'
+                : 'bg-gradient-to-br from-[#2C6E49]/20 to-[#3B945E]/20 text-white border border-white/10'
             } shadow-lg backdrop-blur-sm`}
           >
             {message.image ? (
@@ -185,13 +171,13 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[radial-gradient(75%_75%_at_center,rgba(59,148,94,0.15)_0%,rgb(26,71,49)_100%)]">
-      <div className="p-6 backdrop-blur-sm bg-white/5 border-b border-[#3B945E]/20">
-        <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#ffffff] to-[#ffffff] text-transparent bg-clip-text">
+      <div className="p-6 backdrop-blur-sm bg-white/5 border-b border-white/10">
+        <h2 className="text-2xl font-semibold bg-gradient-to-r from-[#3B945E] to-[#2C6E49] text-transparent bg-clip-text">
           Corporate Assistant
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-[#3B945E]/20 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
         {memoizedMessages}
         {isLoading && (
           <motion.div
@@ -206,7 +192,7 @@ const ChatBot = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form className="p-6 backdrop-blur-sm bg-white/5 border-t border-[#3B945E]/20">
+      <form className="p-6 backdrop-blur-sm bg-white/5 border-t border-white/10">
         <div className="flex items-center space-x-4">
           <input
             type="file"
@@ -217,7 +203,7 @@ const ChatBot = () => {
           />
           <label
             htmlFor="imageUpload"
-            className="p-4 rounded-lg bg-gradient-to-r from-[#3B945E] to-[#2C6E49] text-white hover:from-[#2C6E49] hover:to-[#1A4731] cursor-pointer shadow-lg"
+            className="p-4 rounded-lg bg-gradient-to-r from-[#3B945E] to-[#2C6E49] text-white hover:from-[#2C6E49] hover:to-[#3B945E] cursor-pointer shadow-lg"
           >
             <Image size={20} />
           </label>
@@ -226,14 +212,14 @@ const ChatBot = () => {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 p-4 rounded-lg bg-white/5 text-white placeholder-white/50 border border-[#3B945E]/20 focus:outline-none focus:ring-2 focus:ring-[#3B945E]/50 shadow-inner"
+            className="flex-1 p-4 rounded-lg bg-white/5 text-white placeholder-white/50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#3B945E]/50 shadow-inner"
           />
           <motion.button
             type="submit"
             onClick={handleSubmit}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="p-4 rounded-lg bg-gradient-to-r from-[#3B945E] to-[#2C6E49] text-white hover:from-[#2C6E49] hover:to-[#1A4731] focus:outline-none focus:ring-2 focus:ring-[#3B945E]/50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-4 rounded-lg bg-gradient-to-r from-[#3B945E] to-[#2C6E49] text-white hover:from-[#2C6E49] hover:to-[#3B945E] focus:outline-none focus:ring-2 focus:ring-[#3B945E]/50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
             <Send size={20} />
